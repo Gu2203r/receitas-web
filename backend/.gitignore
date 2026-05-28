@@ -1,0 +1,20 @@
+# Configurações do IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+
+# Arquivos compilados e gerados pelo Maven
+target/
+build/
+*.class
+*.jar
+*.war
+*.ear
+
+# Logs
+logs/
+*.log
+
+# Arquivos do Sistema Operacional
+.DS_Store
+Thumbs.db
