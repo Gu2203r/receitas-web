@@ -16,6 +16,7 @@
     background-position: center;
 }
 
+
 .bg-receita-detalhe {
    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
                    url('../images/fundoinicial.png') no-repeat center center/cover;
