@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Receita - La Cuisine Brasil</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="bg-login">
+
+<nav class="navbar">
+    <a href="index.html">
+        <div class="logo">La Cuisine Brasil</div>
+    </a>
+
+    <form class="search-container">
+        <input type="text"
+               placeholder="Pesquisar receitas..."
+               required>
+    </form>
+
+    <ul class="nav-links" id="menu">
+
+    </ul>
+</nav>
+
+<div class="container-auth">
+    <div class="auth-card" style="width: 700px; margin-top: 50px;">
+
+        <h2>Editar Receita</h2>
+
+        <form id="form-editar" enctype="multipart/form-data">
+
+            <div class="input-group">
+                <label>Título da Receita</label>
+                <input
+                        type="text"
+                        id="nome"
+                        name="nome"
+                        placeholder="Ex: Bolo de Chocolate"
+                        required>
+            </div>
+
+            <div class="row-group">
+
+                <div class="input-group" style="flex: 1;">
+                    <label>Categoria</label>
+
+                    <select
+                            class="custom-field"
+                            id="categoria"
+                            name="categoria"
+                            required>
+
+                        <option value="ENTRADA">
+                            Entrada
+                        </option>
+
+                        <option value="PRATO_PRINCIPAL">
+                            Prato Principal
+                        </option>
+
+                        <option value="SOBREMESA">
+                            Sobremesa
+                        </option>
+
+                    </select>
+                </div>
+
+                <div class="input-group" style="flex: 1;">
+                    <label>Tempo de Preparo (min)</label>
+
+                    <input
+                            type="number"
+                            id="tempo_preparo"
+                            name="tempo_preparo"
+                            placeholder="Ex: 45"
+                            min="1"
+                            required>
+                </div>
+
+                <div class="input-group" style="flex: 1;">
+                    <label>Rendimento</label>
+
+                    <input
+                            type="text"
+                            id="rendimento"
+                            name="rendimento"
+                            placeholder="Ex: 8 porções"
+                            required>
+                </div>
+
+            </div>
+
+            <div class="input-group">
+                <label>Ingredientes</label>
+
+                <textarea
+                        class="custom-field textarea"
+                        id="ingredientes"
+                        name="ingredientes"
+                        rows="5"
+                        placeholder="Liste os ingredientes um por linha..."
+                        required></textarea>
+            </div>
+
+            <div class="input-group">
+                <label>Modo de Preparo</label>
+
+                <textarea
+                        class="custom-field textarea"
+                        id="modo_preparo"
+                        name="modo_preparo"
+                        rows="5"
+                        placeholder="Passo 1, Passo 2..."
+                        required></textarea>
+            </div>
+
+            <div class="input-group">
+
+                <label>Foto da Receita</label>
+
+                <p id="foto-atual"
+                   style="margin-bottom: 10px; font-size: 12px; color: #bbb;">
+                </p>
+
+                <input
+                        type="file"
+                        id="foto"
+                        name="foto"
+                        accept="image/*"
+                        class="custom-field">
+
+            </div>
+
+            <button type="submit" class="btn-primary">
+                Salvar Alterações
+            </button>
+
+        </form>
+
+    </div>
+</div>
+
+<footer style="background: #2b1506; color: white; text-align: center; padding: 40px 0; margin-top: 50px;">
+    <p>&copy; 2026 La Cuisine Brasil - Todos os direitos reservados.</p>
+    <p style="font-size: 12px; color: #888; margin-top: 10px;">
+
+    </p>
+</footer>
+
+<script src="assets/javascript/menu.js"></script>
+<script src="assets/javascript/editar.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Receitas Cadastradas - La Cuisine Brasil</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="page-shell" style="background: #f4f4f4;">
+
+<nav class="navbar">
+    <a href="index.html">
+        <div class="logo">La Cuisine Brasil</div>
+    </a>
+
+    <form class="search-container">
+        <input type="text"
+               placeholder="Pesquisar receitas..."
+               required>
+    </form>
+
+    <ul class="nav-links" id="menu">
+
+    </ul>
+</nav>
+
+<main class="page-content">
+
+    <section class="container" style="margin-top: 40px;">
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+
+            <h2 style="color: #2b1506;">
+                Receitas Cadastradas
+            </h2>
+
+            <a href="cadastrar.html"
+               class="btn-primary"
+               style="width: auto; padding: 10px 25px;">
+                + Nova Receita
+            </a>
+
+        </div>
+
+        <div class="recipe-grid" id="lista-receitas">
+
+            <div class="recipe-card">
+
+                <div class="card-image"
+                     style="background-image: url('assets/images/fundoinicial.png');">
+                </div>
+
+                <div class="card-info">
+
+                    <h3>Carregando receitas...</h3>
+
+                    <p>
+                        Aguarde um momento.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer class="main-footer">
+    <p>&copy; 2026 La Cuisine Brasil - Todos os direitos reservados.</p>
+    <p style="font-size: 12px; color: #888; margin-top: 10px;">
+
+    </p>
+</footer>
+
+<script src="assets/javascript/menu.js"></script>
+<script src="assets/javascript/listar.js"></script>
+
+</body>
+</html>

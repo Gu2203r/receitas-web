@@ -1,0 +1,780 @@
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+.bg-login {
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+                url('../images/fundoinicial.png') no-repeat center center/cover;
+}
+
+.bg-cadastro {
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+                url('../images/fundopizza.png') no-repeat center center/cover;
+}
+
+.bg-home {
+    background-image: url('../images/fundobolo.png');
+    background-size: cover;
+    background-position: center;
+}
+
+.bg-receita-detalhe {
+   background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+                   url('../images/fundoinicial.png') no-repeat center center/cover;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+.page-shell {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.page-content {
+    flex: 1;
+}
+
+.container-auth {
+    min-height: 100vh;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px 16px;
+}
+
+.auth-card {
+    background: rgba(43, 21, 6, 0.95);
+    padding: 40px;
+    border-radius: 15px;
+    border: 1px solid #E67E22;
+    width: 350px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.auth-card h2 { color: #E67E22; margin-bottom: 25px; }
+
+.message-error {
+    background: rgba(192, 57, 43, 0.15);
+    border: 1px solid #c0392b;
+    color: #ffb3aa;
+    padding: 12px 14px;
+    border-radius: 6px;
+    margin-bottom: 18px;
+    font-size: 14px;
+    text-align: left;
+}
+
+.input-group { text-align: left; margin-bottom: 15px; }
+.input-group label { display: block; margin-bottom: 5px; font-size: 14px; }
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 5px;
+    border: none;
+    background: #3d1a06;
+    color: white;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 12px;
+    background: #E67E22;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-primary:hover {
+    background: #d35400;
+ }
+
+ .navbar {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     padding: 10px 20px;
+     background: #2b1506;
+     border-bottom: 2px solid #E67E22;
+     width : 100%;
+ }
+
+ .nav-links {
+     display: flex;
+     list-style: none;
+     gap: 15px;
+     align-items: center;
+ }
+
+ .nav-links a {
+     color: white;
+     text-decoration: none;
+     font-size: 14px;
+     transition: 0.3s;
+     white-space: nowrap;
+ }
+
+ .search-container {
+     flex: 1;
+     margin: 0 20px;
+     max-width: 300px;
+     min-width: 0;
+ }
+
+ .search-container input {
+     width: 100%;
+     padding: 8px 40px 8px 20px;
+     border-radius: 20px;
+     border: none;
+     background: #E67E22;
+     color: white;
+     box-sizing: border-box;
+ }
+
+ .search-container input::placeholder { color: rgba(255,255,255,0.8); }
+
+ .search-icon {
+     position: absolute;
+     right: 15px;
+     top: 50%;
+     transform: translateY(-50%);
+     color: white;
+ }
+
+ .logo {
+ font-size: 1.5rem;
+ font-weight: bold;
+ color: #E67E22;
+ }
+
+ .logo span {
+  color: #E67E22; }
+
+ .nav-links a {
+  color: white;
+  text-decoration: none;
+  transition: 0.3s;
+   }
+ .nav-links a:hover {
+    color: #E67E22;
+     }
+
+ .btn-nav-login {
+     background: #E67E22;
+     padding: 8px 25px;
+     border-radius: 5px;
+     font-weight: bold;
+ }
+
+ .hero {
+     height: 85vh;
+     background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+                 url('../images/fundobolo.png') no-repeat center center/cover;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     text-align: center;
+     color: white;
+ }
+
+ .hero-text h1 { font-size: 3.5rem; margin-bottom: 20px; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
+ .hero-text p { font-size: 1.2rem; margin-bottom: 30px; }
+
+
+ .container {
+     padding: 60px 8%;
+ }
+
+ .section-title {
+     text-align: center;
+     color: #2b1506;
+     font-size: 2rem;
+     margin-bottom: 40px;
+     position: relative;
+ }
+
+ .section-title::after {
+     content: '';
+     display: block;
+     width: 60px;
+     height: 3px;
+     background: #E67E22;
+     margin: 10px auto;
+ }
+
+
+ .recipe-grid {
+     display: grid;
+     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+     gap: 30px;
+ }
+
+ .recipe-card {
+     background: white;
+     border-radius: 10px;
+     overflow: hidden;
+     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+     transition: transform 0.3s;
+     border: 1px solid #eee;
+ }
+
+ .recipe-card:hover {
+     transform: translateY(-10px);
+ }
+
+ .card-image {
+     height: 200px;
+     background-size: cover;
+     background-position: center;
+ }
+
+ .card-info {
+     padding: 20px;
+ }
+
+ .card-info h3 {
+     color: #2b1506;
+     margin-bottom: 10px;
+ }
+
+ .card-info p {
+     color: #666;
+     font-size: 0.9rem;
+     margin-bottom: 15px;
+     line-height: 1.4;
+ }
+
+ .btn-link {
+     color: #E67E22;
+     text-decoration: none;
+     font-weight: bold;
+     font-size: 0.9rem;
+ }
+
+ .btn-link:hover {
+     text-decoration: underline;
+ }
+
+ .bg-light { background-color: #f9f9f9; }
+
+ .novidades-row {
+     display: flex;
+     align-items: center;
+     gap: 40px;
+     background: white;
+     padding: 30px;
+     border-radius: 20px;
+     box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+     flex-wrap: wrap;
+ }
+
+ .novidade-banner {
+     flex: 1;
+     min-width: 300px;
+     position: relative;
+ }
+
+ .novidade-banner img {
+     width: 100%;
+     border-radius: 15px;
+     display: block;
+ }
+
+ .novidade-tag {
+     position: absolute;
+     top: 15px;
+     left: 15px;
+     background: #E67E22;
+     color: white;
+     padding: 5px 15px;
+     border-radius: 50px;
+     font-size: 12px;
+     font-weight: bold;
+ }
+
+ .novidade-texto {
+     flex: 1;
+     min-width: 300px;
+ }
+
+ .novidade-texto h3 {
+     font-size: 1.8rem;
+     color: #2b1506;
+     margin-bottom: 15px;
+ }
+
+
+ .badge-popular {
+     position: absolute;
+     bottom: 10px;
+     right: 10px;
+     background: rgba(255, 255, 255, 0.9);
+     color: #d35400;
+     padding: 4px 10px;
+     border-radius: 5px;
+     font-size: 12px;
+     font-weight: bold;
+ }
+
+ .card-image {
+     position: relative;
+ }
+
+ .container-auth {
+     flex-grow: 1;
+ }
+
+ .navbar + .container-auth {
+     min-height: calc(100vh - 72px);
+ }
+
+ .container-auth .auth-card {
+     max-width: 100%;
+ }
+
+ @media (max-height: 820px) {
+     .container-auth {
+         align-items: flex-start;
+         padding-top: 16px;
+         padding-bottom: 16px;
+     }
+
+     .navbar + .container-auth {
+         padding-top: 20px;
+     }
+
+     .container-auth .auth-card {
+         margin-top: 0 !important;
+     }
+ }
+
+ .row-group {
+     display: flex;
+     gap: 20px;
+     width: 100%;
+     margin-bottom: 20px;
+     flex-wrap: wrap;
+ }
+
+ .row-group .input-group {
+     flex: 1;
+     min-width: 180px;
+ }
+
+ .custom-field {
+     width: 100%;
+     box-sizing: border-box;
+     padding: 12px;
+     border-radius: 5px;
+     background: #3d1a06;
+     color: white;
+     border: 1px solid #4d260a;
+     font-size: 14px;
+     outline: none;
+     transition: 0.3s;
+ }
+
+ .custom-field:focus {
+     border-color: #E67E22;
+ }
+
+ .textarea {
+     resize: vertical;
+     font-family: inherit;
+ }
+
+ .custom-field::placeholder {
+     color: #a8a8a8;
+ }
+
+ .table-container {
+     background: white;
+     border-radius: 10px;
+     overflow: hidden;
+     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+ }
+
+ .recipe-table {
+     width: 100%;
+     border-collapse: collapse;
+     table-layout: fixed;
+ }
+
+ .recipe-table th {
+     background: #2b1506;
+     color: white;
+     padding: 18px;
+     font-weight: 500;
+ }
+
+ .recipe-table td {
+     padding: 15px 18px;
+     border-bottom: 1px solid #eee;
+     color: #444;
+ }
+
+ .actions-cell {
+     text-align: center;
+     display: flex;
+     justify-content: center;
+     gap: 15px;
+ }
+
+ .btn-edit {
+     background: none;
+     border: none;
+     color: #E67E22;
+     font-weight: bold;
+     cursor: pointer;
+     transition: 0.3s;
+ }
+
+ .btn-edit:hover { color: #d35400; text-decoration: underline; }
+
+ .btn-delete {
+     background: none;
+     border: none;
+     color: #c0392b;
+     font-weight: bold;
+     cursor: pointer;
+     transition: 0.3s;
+ }
+
+ .btn-delete:hover { color: #a93226; text-decoration: underline; }
+
+.header-auth-card {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 25px;
+}
+
+.btn-voltar {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+
+    background: transparent;
+    border: 2px solid #E67E22;
+    color: #E67E22;
+
+    padding: 8px 18px;
+    border-radius: 50px;
+
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(230, 126, 34, 0.1);
+}
+
+.btn-voltar .icon-seta {
+    font-size: 18px;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+}
+
+.btn-voltar:hover {
+    background-color: #E67E22;
+    color: white;
+    box-shadow: 0 5px 15px rgba(230, 126, 34, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-voltar:hover .icon-seta {
+    transform: translateX(-4px);
+}
+
+.sobre-wrapper {
+    max-width: 850px;
+    margin: 60px auto;
+    text-align: center;
+}
+
+.sobre-texto {
+    font-size: 36px;
+    color: #2b1506;
+    margin-bottom: 25px;
+}
+
+.sobre-texto p {
+    font-size: 18px;
+    line-height: 1.8;
+    color: #555;
+    margin-bottom: 40px;
+}
+
+.sobre-cards-info {
+    display: flex;
+    gap: 25px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.info-item {
+    text-align: left;
+    flex: 1;
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    border-top: 5px solid #d35400;
+}
+
+.info-item h4 {
+    color: #2b1506;
+    margin: 10px 0;
+}
+
+.info-item p {
+    font-size: 0.9rem;
+    margin-bottom: 0;
+}
+
+.info-icon {
+    font-size: 1.5rem;
+}
+
+.sobre-imagem {
+    flex: 1;
+    min-width: 300px;
+}
+
+.img-sobre {
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 768px) {
+    .sobre-cards-info {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+.receita-detalhe {
+    background: #fff;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+.receita-header {
+    text-align: center;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 30px;
+    margin-bottom: 30px;
+}
+
+.recipe-title {
+    font-size: 42px;
+    color: #2b1506;
+    margin-bottom: 15px;
+}
+
+.recipe-meta {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    font-weight: 600;
+    color: #d35400;
+}
+
+.recipe-content {
+    display: flex;
+    gap: 50px;
+    flex-wrap: wrap;
+}
+
+.recipe-ingredients {
+    flex: 1;
+    min-width: 250px;
+    background: #fdfaf8;
+    padding: 25px;
+    border-radius: 12px;
+}
+
+.recipe-ingredients h3, .recipe-steps h3 {
+    color: #2b1506;
+    margin-bottom: 20px;
+    border-left: 5px solid #d35400;
+    padding-left: 15px;
+}
+
+.recipe-ingredients ul {
+    list-style: none;
+}
+
+.recipe-ingredients li {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    color: #555;
+}
+
+.recipe-steps {
+    flex: 2;
+    min-width: 350px;
+}
+
+.steps-text {
+    line-height: 1.8;
+    color: #444;
+    font-size: 17px;
+}
+
+.recipe-actions {
+    margin-top: 40px;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.divisor-comentarios {
+    margin: 32px 0 24px;
+    border: 0;
+    border-top: 1px solid #ece3dd;
+}
+
+.recipe-comments {
+    margin-top: 8px;
+}
+
+.comments-title {
+    color: #2b1506;
+    margin: 0 0 18px;
+    font-size: 26px;
+}
+
+.comentario-form-container {
+    background: #fdfaf8;
+    border: 1px solid #ece3dd;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 20px;
+}
+
+.recipe-comments .input-group label {
+    color: #5a4436;
+    font-weight: 600;
+}
+
+.recipe-comments .custom-field {
+    background: #fff;
+    color: #2b1506;
+    border: 1px solid #d8c8be;
+}
+
+.recipe-comments .custom-field::placeholder {
+    color: #9a8779;
+}
+
+.recipe-comments .custom-field:focus {
+    border-color: #e67e22;
+    box-shadow: 0 0 0 2px rgba(230, 126, 34, 0.12);
+}
+
+.avaliacao-group {
+    max-width: 240px;
+}
+
+.field-comentario {
+    min-height: 110px;
+}
+
+.btn-comentar {
+    width: auto;
+    min-width: 220px;
+    padding: 12px 20px;
+}
+
+.comments-list {
+    display: grid;
+    gap: 14px;
+}
+
+.comentario-card {
+    background: #fff;
+    border: 1px solid #ece3dd;
+    border-left: 4px solid #e67e22;
+    border-radius: 10px;
+    padding: 14px 16px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+}
+
+.comentario-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    gap: 12px;
+}
+
+.comentario-header strong {
+    color: #2b1506;
+    font-size: 15px;
+}
+
+.comentario-header span {
+    background: #fff3e6;
+    color: #b25a0d;
+    border: 1px solid #f2c89f;
+    border-radius: 999px;
+    padding: 3px 10px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.comentario-card p {
+    margin: 0;
+    color: #5f5147;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .comentario-form-container {
+        padding: 14px;
+    }
+
+    .btn-comentar {
+        width: 100%;
+        min-width: 0;
+    }
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 2px solid #2b1506;
+    color: #2b1506;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-secondary:hover {
+    background: #2b1506;
+    color: #fff;
+}
+
+.main-footer {
+    background: #2b1506;
+    color: white;
+    text-align: center;
+    padding: 40px 0;
+    margin-top: 50px;
+}
+

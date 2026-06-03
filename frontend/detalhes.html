@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalhes da Receita - La Cuisine Brasil</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="index.html">
+        <div class="logo">La Cuisine Brasil</div>
+    </a>
+
+    <form class="search-container">
+        <input type="text"
+               placeholder="Pesquisar receitas..."
+               required>
+    </form>
+
+    <ul class="nav-links" id="menu">
+
+    </ul>
+</nav>
+
+<main class="container">
+
+    <article class="receita-detalhe">
+
+        <header class="receita-header">
+
+            <h1 class="recipe-title" id="nome-receita">
+                Nome da Receita
+            </h1>
+
+            <div class="recipe-meta">
+
+                    <span class="meta-item" id="tempo-receita">
+                        ⏱️ Tempo
+                    </span>
+
+                <span class="meta-item" id="rendimento-receita">
+                        🍽️ Rendimento
+                    </span>
+
+                <span class="meta-item" id="categoria-receita">
+                        🏷️ Categoria
+                    </span>
+
+                <span class="meta-item" id="autor-receita">
+                        👤 Autor
+                    </span>
+
+            </div>
+
+        </header>
+
+        <div class="recipe-image-container">
+            <img
+                    id="foto-receita"
+                    class="receita-img"
+                    src=""
+                    alt="Foto da Receita">
+        </div>
+
+        <div class="recipe-content">
+
+            <aside class="recipe-ingredients">
+
+                <h3>Ingredientes</h3>
+
+                <p id="ingredientes-receita"
+                   style="white-space: pre-wrap;">
+                </p>
+
+            </aside>
+
+            <section class="recipe-steps">
+
+                <h3>Modo de Preparo</h3>
+
+                <div class="steps-text">
+
+                    <p id="modo-preparo">
+                    </p>
+
+                </div>
+
+            </section>
+
+        </div>
+
+        <br>
+
+        <hr class="divisor-comentarios">
+
+        <section class="recipe-comments">
+
+            <h3 class="comments-title">
+                Avaliações e Comentários
+            </h3>
+
+            <div class="comentario-form-container">
+
+                <form id="form-avaliacao">
+
+                    <div class="input-group avaliacao-group">
+
+                        <label>Sua Avaliação</label>
+
+                        <select
+                                id="nota"
+                                name="nota"
+                                class="custom-field select-avaliacao"
+                                required>
+
+                            <option value="5">Excelente</option>
+                            <option value="4">Muito Bom</option>
+                            <option value="3">Bom</option>
+                            <option value="2">Regular</option>
+                            <option value="1">Ruim</option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="input-group">
+
+                        <label>Seu Comentário</label>
+
+                        <textarea
+                                id="comentario"
+                                name="comentario"
+                                class="custom-field textarea field-comentario"
+                                rows="3"
+                                placeholder="Conte para a comunidade o que achou desta receita..."
+                                required></textarea>
+
+                    </div>
+
+                    <button
+                            type="submit"
+                            class="btn-primary btn-comentar">
+
+                        Publicar Avaliação
+
+                    </button>
+
+                </form>
+
+            </div>
+
+            <div
+                    class="comments-list"
+                    id="lista-comentarios">
+
+                <div class="comentario-card">
+
+                    <p>
+                        Nenhuma avaliação encontrada.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </article>
+
+</main>
+
+<footer style="background: #2b1506; color: white; text-align: center; padding: 40px 0; margin-top: 50px;">
+    <p>&copy; 2026 La Cuisine Brasil - Todos os direitos reservados.</p>
+    <p style="font-size: 12px; color: #888; margin-top: 10px;">
+
+    </p>
+</footer>
+
+<script src="assets/javascript/menu.js"></script>
+<script src="assets/javascript/detalhes.js"></script>
+
+</body>
+</html>
