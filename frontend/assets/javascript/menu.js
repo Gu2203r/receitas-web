@@ -1,20 +1,42 @@
-const menu = document.getElementById("menu");
+document.addEventListener("DOMContentLoaded", () => {
+    const menuContainer = document.getElementById('menu');
 
-if (sessionStorage.getItem("logado")) {
+    const isAutenticado = sessionStorage.getItem('autenticado');
 
-    menu.innerHTML = `
-        <li><a href="index.html">Home</a></li>
-        <li><a href="sobre.html">Sobre o Sistema</a></li>
-        <li><a href="cadastrar.html">Adicionar Receita</a></li>
-        <li><a href="listar.html">Minhas Receitas</a></li>
-        <li><a href="#" id="logout">Logout</a></li>
-    `;
+    if (isAutenticado) {
+        menuContainer.innerHTML = `
+            <li><a href="index.html">Home</a></li>
+            <li><a href="sobre.html">Sobre o Sistema</a></li>
+            <li><a href="cadastrar.html">Adicionar Receita</a></li>
+            <li><a href="listar.html">Minhas Receitas</a></li>
+            <li><a href="#" id="btn-logout" class="btn-nav-login" style="background-color: #c0392b;">Logout</a></li>
+        `;
 
-} else {
+        document.getElementById('btn-logout').addEventListener('click', (e) => {
+            e.preventDefault();
+            fazerLogout();
+        });
+    } else {
+        menuContainer.innerHTML = `
+            <li><a href="index.html">Home</a></li>
+            <li><a href="sobre.html">Sobre o Sistema</a></li>
+            <li><a href="login.html" class="btn-nav-login">Login</a></li>
+        `;
+    }
+});
 
-    menu.innerHTML = `
-        <li><a href="index.html">Home</a></li>
-        <li><a href="sobre.html">Sobre o Sistema</a></li>
-        <li><a href="login.html">Login</a></li>
-    `;
+function fazerLogout() {
+    fetch(`${API_BASE_URL}/logout`, {
+        method: 'POST',
+        credentials: 'include'
+    })
+    .then(response => {
+        sessionStorage.removeItem('autenticado');
+        window.location.href = 'login.html';
+    })
+    .catch(error => {
+        console.error("Erro ao fazer logout:", error);
+        sessionStorage.removeItem('autenticado');
+        window.location.href = 'login.html';
+    });
 }
