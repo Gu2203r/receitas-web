@@ -4,10 +4,12 @@ import br.edu.ifsp.model.FuncaoUsuario;
 import br.edu.ifsp.model.Usuario;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UsuarioDAO {
 
     Usuario inserir(String nome, String email, String senha, FuncaoUsuario funcao);
 
-    List<Usuario> listar();
+    // Retorna um map com o email do usuario como chave
+    Map<String, Usuario> listar();
 }

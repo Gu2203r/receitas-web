@@ -1,39 +1,33 @@
 package br.edu.ifsp.dao;
 
-import br.edu.ifsp.model.FuncaoUsuario;
-import br.edu.ifsp.model.Usuario;
+import br.edu.ifsp.model.Receita;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class UsuarioCsvDAO  implements UsuarioDAO{
+public class ReceitaCsvDAO implements ReceitaDAO{
 
     private String path = null;
+    private int proxId;
 
-    public UsuarioCsvDAO(String path){
-        this.path = path + "Usuario.csv";
+    public ReceitaCsvDAO(String path){
+        this.path = path + "Receita.csv";
+        this.proxId = lastId();
     }
 
     @Override
-    public Usuario inserir(String nome, String email, String senha, FuncaoUsuario funcao) {
-        Usuario u = null;
+    public Receita inserir(Receita receita) {
 
         try {
             checkFile();
 
-            FileWriter fw = new FileWriter(path, true);
+            FileWriter fw = new FileWriter(path,true);
             PrintWriter pw = new PrintWriter(fw);
 
-            if (funcao != null){
-                u = new Usuario(nome, email, senha, funcao);
-            }else {
-                u = new Usuario(nome, email, senha);
-            }
+            receita.setId(getProxId());
 
-            pw.println(u);
+            pw.println(receita);
             pw.close();
             fw.close();
 
@@ -41,28 +35,29 @@ public class UsuarioCsvDAO  implements UsuarioDAO{
             throw new RuntimeException(e);
         }
 
-        return u;
+        return receita;
     }
 
     @Override
-    public Map<String, Usuario> listar() {
-        Map<String, Usuario> listaUsuarios = new HashMap<>();
+    public List<Receita> listar() {
+        List<Receita> listaReceita = new ArrayList<>();
 
         try {
             checkFile();
-
             FileReader fr = new FileReader(path);
             BufferedReader br = new BufferedReader(fr);
 
             String linha;
 
             while ((linha = br.readLine()) != null){
-                String[] partes = linha.split(";");
+                String[] partes =linha.split(";");
+//                Receita r = new Receita(Integer.parseInt(partes[0]), partes[1], partes[2]);
 
-                Usuario u = new Usuario(partes[0], partes[1], partes[2], FuncaoUsuario.valueOf(partes[3]));
-
-                listaUsuarios.put(partes[1], u);
+//                listaReceita.add(r);
             }
+
+            fr.close();
+            br.close();
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -70,7 +65,16 @@ public class UsuarioCsvDAO  implements UsuarioDAO{
             throw new RuntimeException(e);
         }
 
-        return listaUsuarios;
+        return listaReceita;
+    }
+
+    private int lastId(){
+        List<Receita> lista = this.listar();
+        return !lista.isEmpty() ? lista.get(lista.size()-1).getId() : 0;
+    }
+
+    private int getProxId(){
+        return ++this.proxId;
     }
 
     private void checkFile(){

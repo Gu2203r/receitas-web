@@ -42,6 +42,8 @@ public class CadastroUsuarioServlet extends HttpServlet {
         String senha;
         FuncaoUsuario funcao;
 
+        UsuarioDAO dao = (UsuarioDAO) getServletContext().getAttribute("daoUsuario");
+
         if(contentType.contains("application/json")){
             StringBuilder sb = new StringBuilder();
             BufferedReader br = request.getReader();
@@ -69,13 +71,18 @@ public class CadastroUsuarioServlet extends HttpServlet {
         List<String> listaMensagens = new ArrayList<>();
 
         if (nome.isEmpty()){
-            listaMensagens.add("Nome ivalido");
-            System.out.println("nome invalida");
+            listaMensagens.add("Nome invalido");
+            System.out.println("nome invalido");
         }
 
         if (email.isEmpty()){
             listaMensagens.add("Email invalido");
-            System.out.println("email invalida");
+            System.out.println("email invalido");
+        }
+
+        if (dao.listar().containsKey(email)){
+            listaMensagens.add("Email ja cadastrado");
+            System.out.println("Email ja cadastrado");
         }
 
         if (senha.isEmpty()){
@@ -91,7 +98,7 @@ public class CadastroUsuarioServlet extends HttpServlet {
             mensagem.put("mensagem", "Houve um problema");
             mensagem.put("problemas", listaMensagens);
         }else {
-            UsuarioDAO dao = (UsuarioDAO) getServletContext().getAttribute("daoUsuario");
+
             Usuario u;
 
             if (funcao == null){
