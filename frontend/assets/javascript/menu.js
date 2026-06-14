@@ -7,8 +7,9 @@ document.addEventListener("DOMContentLoaded", () => {
         menuContainer.innerHTML = `
             <li><a href="index.html">Home</a></li>
             <li><a href="sobre.html">Sobre o Sistema</a></li>
+            <li><a href="listar.html">Receitas</a></li>
             <li><a href="cadastrar.html">Adicionar Receita</a></li>
-            <li><a href="listar.html">Minhas Receitas</a></li>
+            <li><a href="usuarios.html">Usuários</a></li>
             <li><a href="#" id="btn-logout" class="btn-nav-login" style="background-color: #c0392b;">Logout</a></li>
         `;
 
@@ -20,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
         menuContainer.innerHTML = `
             <li><a href="index.html">Home</a></li>
             <li><a href="sobre.html">Sobre o Sistema</a></li>
-            <li><a href="login.html" class="btn-nav-login">Login</a></li>
+            <li><a href="listar.html">Receitas</a></li> <li><a href="login.html" class="btn-nav-login">Login</a></li>
         `;
     }
 });
