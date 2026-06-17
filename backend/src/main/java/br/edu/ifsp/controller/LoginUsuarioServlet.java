@@ -58,13 +58,10 @@ public class LoginUsuarioServlet extends HttpServlet {
 
             System.out.println(email);
 
-            Map<String, Usuario> listaUsuarios = usuarioDAO.listar();
-
             List<String> listaMensagens = new ArrayList<>();
-            Usuario usuario = null;
+            Usuario usuario = usuarioDAO.buscaPorLogin(email);
 
-            if (listaUsuarios.containsKey(email)){
-                usuario = listaUsuarios.get(email);
+            if (usuario != null){
 
                 if (usuario.getSenha().equals(senha)){
                     getServletContext().setAttribute("usuario", usuario);
@@ -91,6 +88,7 @@ public class LoginUsuarioServlet extends HttpServlet {
 
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
+
             PrintWriter pw = response.getWriter();
             System.out.println(mensagem);
             pw.println(gson.toJson(mensagem));
