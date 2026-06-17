@@ -11,5 +11,11 @@ public interface UsuarioDAO {
     Usuario inserir(String nome, String email, String senha, FuncaoUsuario funcao);
 
     // Retorna um map com o email do usuario como chave
-    Map<String, Usuario> listar();
+    List<Usuario> listar();
+
+    Usuario atualizar(String nome,String email, String senha);
+
+    Usuario buscaPorLogin(String email);
+
+    Usuario excluir(String email);
 }
