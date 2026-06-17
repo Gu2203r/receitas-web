@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     
                     return data
                 }  else {
-                    console.log("algum erro ocoreu")
+                    console.log("algum erro ocorreu")
                     mostrarErro(data.problemas);
                     return data
                 }

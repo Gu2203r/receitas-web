@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
             })
             .then(response => {
                 if (response.ok) {
-                    alert("Conta criada com sucesso! Podes fazer login agora.");
+                    alert("Conta criada com sucesso!");
                     window.location.href = 'login.html';
                 } else if (response.status === 400) {
                     return response.json().then(data => {
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
             })
             .catch(error => {
                 console.error("Erro no Fetch:", error);
-                mostrarErro("Erro de conexão com o servidor. Verifica se o backend (Tomcat/Servlets) está a correr.");
+                mostrarErro("Erro de conexão com o servidor. Verifique se o backend está rodando.");
             });
         });
     }
