@@ -107,11 +107,15 @@ function excluirReceita(id) {
         return;
     }
 
-    fetch(`http://localhost:8081/site/excluir?id=${id}`, {
+    const json = {
+        id: id
+    }
+
+    fetch(`http://localhost:8081/site/excluir_receita`, {
         method: 'POST',
-        credentials: 'include'
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(json)
     })
-    .then(verificarAutenticacao)
     .then(response => {
         if (response.ok) {
             alert("Receita removida com sucesso!");
