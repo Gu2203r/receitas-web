@@ -2,88 +2,151 @@ document.addEventListener("DOMContentLoaded", () => {
     carregarReceitasHome();
 });
 
-function carregarReceitasHome() {
-    const containerDestaque = document.getElementById('receitas-destaque');
-    const containerPopulares = document.getElementById('receitas-populares');
-    const containerNovidadeTexto = document.querySelector('.novidade-texto');
+async function carregarReceitasHome() {
+    try {
+        const response = await fetch(`http://localhost:8081/site/iniciar`);
 
-    fetch(`${API_BASE_URL}/listar`, {
-        method: 'GET',
-        credentials: 'include'
-    })
-    .then(response => response.json())
-    .then(receitas => {
-        if (!receitas || receitas.length === 0) {
+        if (!response.ok) throw new Error(`Status ${response.status}`);
+
+        const dados = await response.json();
+
+        // sem receitas cadastradas
+        if (dados.mensagem) {
             mostrarMensagemVazia();
             return;
         }
 
-        containerDestaque.innerHTML = '';
-        containerPopulares.innerHTML = '';
+        await Promise.all([
+            renderizarMelhoresAvaliadas(dados.melhoresAvaliadas),
+            renderizarNovidade(dados.novidade),
+            renderizarPrimeirasAdicionadas(dados.primeirasAdicionadas)
+        ]);
 
-        const destaques = receitas.slice(0, 3);
-        destaques.forEach(receita => {
-            containerDestaque.appendChild(criarCardReceita(receita, false));
-        });
-
-        const novidade = receitas[receitas.length - 1];
-        if (novidade && containerNovidadeTexto) {
-            containerNovidadeTexto.innerHTML = `
-                <h3>${novidade.nome}</h3>
-                <p>Uma deliciosa receita de ${novidade.categoria.replace('_', ' ').toLowerCase()} preparada por ${novidade.autor || 'Chef Anônimo'}. Tempo de preparo de apenas ${novidade.tempo_preparo} minutos!</p>
-                <br>
-                <a href="detalhes.html?id=${receitaId(novidade)}" class="btn-primary" style="width: auto; text-decoration: none; display: inline-block; text-align: center;">
-                    Ler Passo a Passo
-                </a>
-            `;
-        }
-
-        const populares = receitas.slice(1, 4);
-        populares.forEach(receita => {
-            containerPopulares.appendChild(criarCardReceita(receita, true));
-        });
-    })
-    .catch(error => {
+    } catch (error) {
         console.error("Erro ao carregar receitas na home:", error);
-        if (containerDestaque) containerDestaque.innerHTML = '<p style="color: white;">Erro ao carregar as receitas.</p>';
-        if (containerPopulares) containerPopulares.innerHTML = '<p style="color: #2b1506;">Erro ao carregar as receitas.</p>';
-    });
+        mostrarErroCarregamento();
+    }
 }
 
-function criarCardReceita(receita, éPopular) {
+// melhores avaliadas
+
+async function renderizarMelhoresAvaliadas(receitas) {
+    const container = document.getElementById('receitas-destaque');
+    if (!container || !receitas || receitas.length === 0) return;
+
+    container.innerHTML = '';
+
+    for (const receita of receitas) {
+        const card = await criarCard(receita, false);
+        container.appendChild(card);
+    }
+}
+
+// ultima adicionada
+
+async function renderizarNovidade(receita) {
+    if (!receita) return;
+
+    const banner = document.querySelector('.novidade-banner img');
+    const texto  = document.querySelector('.novidade-texto');
+
+    if (!banner || !texto) return;
+
+    // Carrega a imagem da novidade no banner
+    const imagemUrl = await carregarImagem(receita.id);
+    banner.src = imagemUrl;
+    banner.alt = receita.nome;
+
+    const categoria = receita.categoria
+        ? receita.categoria.replace(/_/g, ' ').toLowerCase()
+        : 'culinária';
+
+    texto.innerHTML = `
+        <h3>${receita.nome}</h3>
+        <p>
+            Uma deliciosa receita de <strong>${categoria}</strong>
+
+            Tempo de preparo de apenas <strong>${receita.tempoPreparo} minutos</strong>!
+        </p>
+        <br>
+        <a href="detalhes.html?id=${receita.id}"
+           class="btn-primary"
+           style="width: auto; text-decoration: none; display: inline-block; text-align: center;">
+            Ler Passo a Passo
+        </a>
+    `;
+}
+
+// exibir as 3 primeiras adicionadas
+
+async function renderizarPrimeirasAdicionadas(receitas) {
+    const container = document.getElementById('receitas-primeiras');
+    if (!container || !receitas || receitas.length === 0) return;
+
+    container.innerHTML = '';
+
+    for (const receita of receitas) {
+        const card = await criarCard(receita, false);
+        container.appendChild(card);
+    }
+}
+
+// criacao dos cards
+
+async function criarCard(receita, isPopular) {
     const card = document.createElement('div');
     card.className = 'recipe-card';
 
-    const imagemFundo = receita.foto || 'assets/images/fundoinicial.png';
+    const imagemUrl = await carregarImagem(receita.id);
 
-    let badgePopular = '';
-    if (éPopular) {
-        badgePopular = `<span class="badge-popular">🔥 Popular</span>`;
-    }
-
-    const id = receitaId(receita);
+    const badge = isPopular ? `<span class="badge-popular">🔥 Popular</span>` : '';
+    const categoria = receita.categoria
+        ? receita.categoria.replace(/_/g, ' ')
+        : 'Não informada';
 
     card.innerHTML = `
-        <div class="card-image" style="background-image: url('${imagemFundo}');">
-            ${badgePopular}
+        <div class="card-image" style="background-image: url('${imagemUrl}');">
+            ${badge}
         </div>
         <div class="card-info">
             <h3>${receita.nome}</h3>
-            <p>Por: ${receita.autor || 'La Cuisine'} | Categoria: ${receita.categoria.replace('_', ' ')}</p>
-            <a href="detalhes.html?id=${id}" class="btn-link">Ver Receita</a>
+            <p>
+                <strong>${'La Cuisine'}</strong> &middot; ${categoria}
+            </p>
+            <a href="detalhes.html?id=${receita.id}" class="btn-link">Ver Receita</a>
         </div>
     `;
 
     return card;
 }
 
-function receitaId(receita) {
-    return receita.id !== undefined ? receita.id : (receita._id || 0);
+// imagem das receitas
+
+async function carregarImagem(idReceita) {
+    try {
+        const response = await fetch(`http://localhost:8081/site/imagem_receita?id=${idReceita}`);
+        if (!response.ok) throw new Error(`Status ${response.status}`);
+        const blob = await response.blob();
+        return URL.createObjectURL(blob);
+    } catch {
+        return 'assets/images/fundoinicial.png';
+    }
 }
 
+
+// mensagens de erro
 function mostrarMensagemVazia() {
-    const containerDestaque = document.getElementById('receitas-destaque');
-    if (containerDestaque) {
-        containerDestaque.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #555;">Nenhuma receita cadastrada ainda.</p>';
-    }
+    const containers = ['receitas-destaque', 'receitas-primeiras'];
+    containers.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #555;">Nenhuma receita cadastrada ainda.</p>';
+    });
+}
+
+function mostrarErroCarregamento() {
+    const containers = ['receitas-destaque', 'receitas-primeiras'];
+    containers.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #c0392b;">Erro ao carregar as receitas. Verifique o servidor.</p>';
+    });
 }

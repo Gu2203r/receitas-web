@@ -1,290 +1,194 @@
 document.addEventListener("DOMContentLoaded", () => {
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const receitaId = urlParams.get('id');
-
-    if (!receitaId) {
-
-        window.location.href = 'index.html';
+    const id = obterIdDaUrl();
+ 
+    if (!id) {
+        exibirErro("ID da receita não encontrado na URL.");
         return;
     }
-
-    carregarDetalhesReceita(receitaId);
-    configurarFormularioAvaliacao(receitaId);
+ 
+    carregarDetalhesReceita(id);
+    carregarAvaliacoes(id);
+    configurarFormAvaliacao(id);
 });
-
+ 
+// Extrai o id da URL da página
+function obterIdDaUrl() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("id");
+}
+ 
 function carregarDetalhesReceita(id) {
-    fetch(`${API_BASE_URL}/detalhes?id=${id}`, {
-        method: 'GET',
-        credentials: 'include'
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Receita não encontrada');
-        }
-        return response.json();
-    })
-    .then(receita => {
-
-        document.getElementById('nome-receita').textContent = receita.nome;
-        document.getElementById('tempo-receita').innerHTML = `⏱️ ${receita.tempo_preparo} min`;
-        document.getElementById('rendimento-receita').innerHTML = `🍽️ ${receita.rendimento}`;
-        document.getElementById('categoria-receita').innerHTML = `🏷️ ${receita.categoria ? receita.categoria.replace('_', ' ') : 'Geral'}`;
-        document.getElementById('autor-receita').innerHTML = `👤 ${receita.autor || 'Chef Anónimo'}`;
-
-        const imgFoto = document.getElementById('foto-receita');
-        if (imgFoto) {
-            imgFoto.src = receita.foto || 'assets/images/fundoinicial.png';
-            imgFoto.alt = `Foto de ${receita.nome}`;
-        }
-
-        document.getElementById('ingredientes-receita').textContent = receita.ingredientes;
-        document.getElementById('modo-preparo').textContent = receita.modo_preparo;
-
-        renderizarAvaliacoes(receita.avaliacoes || []);
-    })
-    .catch(error => {
-        console.error("Erro ao carregar detalhes da receita:", error);
-        alert("Não foi possível carregar os detalhes desta receita.");
-        window.location.href = 'index.html';
-    });
-}
-
-function configurarFormularioAvaliacao(id) {
-    const formAvaliacao = document.getElementById('form-avaliacao');
-
-    if (formAvaliacao) {
-        formAvaliacao.addEventListener('submit', (e) => {
-            e.preventDefault();
-
-            const notaSelect = document.getElementById('nota');
-            const comentarioTextarea = document.getElementById('comentario');
-
-            const dadosAvaliacao = {
-                receitaId: parseInt(id),
-                nota: parseInt(notaSelect.value),
-                comentario: comentarioTextarea.value
-            };
-
-            fetch(`${API_BASE_URL}/detalhes?id=${id}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(dadosAvaliacao),
-                credentials: 'include'
-            })
-            .then(response => {
-                if (response.ok) {
-                    alert("Avaliação publicada com sucesso!");
-                    adicionarComentarioAoDOM(dadosAvaliacao.nota, dadosAvaliacao.comentario);
-                    formAvaliacao.reset();
-                } else if (response.status === 401) {
-                    alert("Precisa de estar autenticado para enviar uma avaliação.");
-                    window.location.href = 'login.html';
-                } else {
-                    alert("Avaliação registada localmente no ecrã!");
-                    adicionarComentarioAoDOM(dadosAvaliacao.nota, dadosAvaliacao.comentario);
-                    formAvaliacao.reset();
-                }
-            })
-            .catch(error => {
-                console.error("Erro ao processar envio:", error);
-
-                adicionarComentarioAoDOM(dadosAvaliacao.nota, dadosAvaliacao.comentario);
-                formAvaliacao.reset();
-            });
+    fetch(`http://localhost:8081/site/detalhes_receita?id=${id}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Receita não encontrada (status ${response.status})`);
+            }
+            return response.json();
+        })
+        .then(async receita => {
+            preencherCampos(receita);
+        })
+        .catch(error => {
+            console.error("Erro ao carregar detalhes da receita:", error);
         });
-    }
+}
+ 
+function preencherCampos(receita) {
+    document.getElementById("nome-receita").textContent = receita.nome || "Sem nome";
+ 
+    document.getElementById("tempo-receita").textContent =
+        `⏱️ ${receita.tempoPreparo ? receita.tempoPreparo + " min" : "Não informado"}`;
+ 
+    document.getElementById("rendimento-receita").textContent =
+        `🍽️ ${receita.rendimento || "Não informado"}`;
+ 
+    document.getElementById("categoria-receita").textContent =
+        `🏷️ ${receita.categoria ? receita.categoria.replace(/_/g, " ") : "Não informada"}`;
+ 
+    document.getElementById("autor-receita").textContent =
+        `👤 ${receita.autor || "Desconhecido"}`;
+ 
+    // Conteúdo
+    document.getElementById("ingredientes-receita").textContent =
+        receita.ingredientes || "Ingredientes não informados.";
+ 
+    document.getElementById("modo-preparo").textContent =
+        receita.modoPreparo || "Modo de preparo não informado.";
+ 
+    // Atualiza o titulo da aba do navegador
+    document.title = `${receita.nome} - La Cuisine Brasil`;
 }
 
+function carregarAvaliacoes(idReceita) {
+    fetch(`http://localhost:8081/site/listar_avaliacao?id=${idReceita}`)
+        .then(response => {
+            if (!response.ok) throw new Error(`Status ${response.status}`);
+            return response.json();
+        })
+        .then(avaliacoes => renderizarAvaliacoes(avaliacoes))
+        .catch(error => {
+            console.error("Erro ao carregar avaliações:", error);
+        });
+}
+ 
 function renderizarAvaliacoes(avaliacoes) {
-    const listaContainer = document.getElementById('lista-comentarios');
-
-    if (!listaContainer) return;
-
-    if (avaliacoes.length === 0) {
-        listaContainer.innerHTML = `
+    const lista = document.getElementById("lista-comentarios");
+ 
+    if (!avaliacoes || avaliacoes.length === 0) {
+        lista.innerHTML = `
             <div class="comentario-card">
-                <p>Nenhuma avaliação encontrada. Seja o primeiro a comentar!</p>
-            </div>
-        `;
+                <p>Nenhuma avaliação ainda. Seja o primeiro a comentar!</p>
+            </div>`;
         return;
     }
-
-    listaContainer.innerHTML = '';
-    avaliacoes.forEach(av => {
-        const card = document.createElement('div');
-        card.className = 'comentario-card';
-        card.innerHTML = `
+ 
+    lista.innerHTML = avaliacoes.map(avaliacao => `
+        <div class="comentario-card">
             <div class="comentario-header">
-                <strong>${av.usuario || 'Utilizador'}</strong>
-                <span>★ ${av.nota}/5</span>
+                <strong>${avaliacao.avaliador || "Anônimo"}</strong>
+                <span>${renderizarEstrelas(avaliacao.nota)}</span>
             </div>
-            <p>${av.comentario}</p>
-        `;
-        listaContainer.appendChild(card);
+            <p>${avaliacao.comentario || ""}</p>
+        </div>
+    `).join('');
+}
+ 
+function renderizarEstrelas(nota) {
+    const n = Math.max(0, Math.min(5, parseInt(nota) || 0));
+    return "⭐".repeat(n) + "☆".repeat(5 - n);
+}
+ 
+ 
+function configurarFormAvaliacao(idReceita) {
+    const form = document.getElementById("form-avaliacao");
+ 
+    // Esconde o formulário se o usuário não estiver logado
+    const usuario = sessionStorage.getItem('usuario');
+    if (!usuario) {
+        form.innerHTML = `
+            <p style="color: #888; font-size: 14px;">
+                <a href="login.html" class="btn-link">Faça login</a> para deixar sua avaliação.
+            </p>`;
+        return;
+    }
+ 
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+ 
+        const nota = parseInt(document.getElementById("nota").value);
+        const comentario = document.getElementById("comentario").value.trim();
+ 
+        if (!comentario) {
+            mostrarFeedback(form, "Por favor, escreva um comentário.", "erro");
+            return;
+        }
+ 
+        const json = {
+            receita: parseInt(idReceita),
+            nota: nota,
+            comentario: comentario
+        };
+ 
+        fetch(`http://localhost:8081/site/avaliar`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(json)
+        })
+        .then(response => response.json().then(data => ({ status: response.status, data })))
+        .then(({ status, data }) => {
+            if (status === 200) {
+                mostrarFeedback(form, data.mensagem || "Avaliação publicada com sucesso!", "sucesso");
+                form.reset();
+                // Recarrega a lista para exibir o novo comentário imediatamente
+                carregarAvaliacoes(idReceita);
+            } else if (status === 400) {
+                const problemas = data.problemas ? data.problemas.join(", ") : data.mensagem;
+                mostrarFeedback(form, problemas, "erro");
+            } else if (status === 401) {
+                mostrarFeedback(form, "Sessão expirada. Faça login novamente.", "erro");
+            } else {
+                mostrarFeedback(form, "Erro inesperado. Tente novamente.", "erro");
+            }
+        })
+        .catch(error => {
+            console.error("Erro ao enviar avaliação:", error);
+            mostrarFeedback(form, "Erro ao conectar com o servidor.", "erro");
+        });
     });
 }
-
-function adicionarComentarioAoDOM(nota, texto) {
-    const listaContainer = document.getElementById('lista-comentarios');
-    if (!listaContainer) return;
-
-    if (listaContainer.textContent.includes("Nenhuma avaliação encontrada")) {
-        listaContainer.innerHTML = '';
+ 
+// Exibe uma mensagem de feedback logo acima do botão de submit
+function mostrarFeedback(form, mensagem, tipo) {
+    const feedbackAnterior = form.querySelector(".feedback-avaliacao");
+    if (feedbackAnterior) feedbackAnterior.remove();
+ 
+    const div = document.createElement("div");
+    div.className = "feedback-avaliacao message-error";
+    div.style.marginBottom = "12px";
+ 
+    if (tipo === "sucesso") {
+        div.style.background = "rgba(39, 174, 96, 0.12)";
+        div.style.borderColor = "#27ae60";
+        div.style.color = "#a8f0c6";
     }
-
-    const card = document.createElement('div');
-    card.className = 'comentario-card';
-    card.innerHTML = `
-        <div class="comentario-header">
-            <strong>Você</strong>
-            <span>★ ${nota}/5</span>
-        </div>
-        <p>${texto}</p>
-    `;
-
-          const urlParams = new URLSearchParams(window.location.search);
-          const receitaId = urlParams.get('id');
-
-          if (!receitaId) {
-
-              window.location.href = 'index.html';
-              return;
-          }
-
-          carregarDetalhesReceita(receitaId);
-          configurarFormularioAvaliacao(receitaId);
-      });
-
-      function carregarDetalhesReceita(id) {
-          fetch(`${API_BASE_URL}/detalhes?id=${id}`, {
-              method: 'GET',
-              credentials: 'include'
-          })
-          .then(response => {
-              if (!response.ok) {
-                  throw new Error('Receita não encontrada');
-              }
-              return response.json();
-          })
-          .then(receita => {
-              document.getElementById('nome-receita').textContent = receita.nome;
-              document.getElementById('tempo-receita').innerHTML = `⏱️ ${receita.tempo_preparo} min`;
-              document.getElementById('rendimento-receita').innerHTML = `🍽️ ${receita.rendimento}`;
-              document.getElementById('categoria-receita').innerHTML = `🏷️ ${receita.categoria ? receita.categoria.replace('_', ' ') : 'Geral'}`;
-              document.getElementById('autor-receita').innerHTML = `👤 ${receita.autor || 'Chef Anónimo'}`;
-
-              const imgFoto = document.getElementById('foto-receita');
-              if (imgFoto) {
-                  imgFoto.src = receita.foto || 'assets/images/fundoinicial.png';
-                  imgFoto.alt = `Foto de ${receita.nome}`;
-              }
-
-              document.getElementById('ingredientes-receita').textContent = receita.ingredientes;
-              document.getElementById('modo-preparo').textContent = receita.modo_preparo;
-
-              renderizarAvaliacoes(receita.avaliacoes || []);
-          })
-          .catch(error => {
-              console.error("Erro ao carregar detalhes da receita:", error);
-              alert("Não foi possível carregar os detalhes desta receita.");
-              window.location.href = 'index.html';
-          });
-      }
-
-      function configurarFormularioAvaliacao(id) {
-          const formAvaliacao = document.getElementById('form-avaliacao');
-
-          if (formAvaliacao) {
-              formAvaliacao.addEventListener('submit', (e) => {
-                  e.preventDefault();
-
-                  const notaSelect = document.getElementById('nota');
-                  const comentarioTextarea = document.getElementById('comentario');
-
-                  const dadosAvaliacao = {
-                      receitaId: parseInt(id),
-                      nota: parseInt(notaSelect.value),
-                      comentario: comentarioTextarea.value
-                  };
-
-                  fetch(`${API_BASE_URL}/detalhes?id=${id}`, {
-                      method: 'POST',
-                      headers: {
-                          'Content-Type': 'application/json'
-                      },
-                      body: JSON.stringify(dadosAvaliacao),
-                      credentials: 'include'
-                  })
-                  .then(response => {
-                      if (response.ok) {
-                          alert("Avaliação publicada com sucesso!");
-                          adicionarComentarioAoDOM(dadosAvaliacao.nota, dadosAvaliacao.comentario);
-                          formAvaliacao.reset();
-                      } else if (response.status === 401) {
-                          alert("Precisa de estar autenticado para enviar uma avaliação.");
-                          window.location.href = 'login.html';
-                      } else {
-                          alert("Avaliação registada localmente no ecrã!");
-                          adicionarComentarioAoDOM(dadosAvaliacao.nota, dadosAvaliacao.comentario);
-                          formAvaliacao.reset();
-                      }
-                  })
-                  .catch(error => {
-                      console.error("Erro ao processar envio:", error);
-                      adicionarComentarioAoDOM(dadosAvaliacao.nota, dadosAvaliacao.comentario);
-                      formAvaliacao.reset();
-                  });
-              });
-          }
-      }
-
-      function renderizarAvaliacoes(avaliacoes) {
-          const listaContainer = document.getElementById('lista-comentarios');
-
-          if (!listaContainer) return;
-
-          if (avaliacoes.length === 0) {
-              listaContainer.innerHTML = `
-                  <div class="comentario-card">
-                      <p>Nenhuma avaliação encontrada. Seja o primeiro a comentar!</p>
-                  </div>
-              `;
-              return;
-          }
-
-          listaContainer.innerHTML = '';
-          avaliacoes.forEach(av => {
-              const card = document.createElement('div');
-              card.className = 'comentario-card';
-              card.innerHTML = `
-                  <div class="comentario-header">
-                      <strong>${av.usuario || 'Utilizador'}</strong>
-                      <span>★ ${av.nota}/5</span>
-                  </div>
-                  <p>${av.comentario}</p>
-              `;
-              listaContainer.appendChild(card);
-          });
-      }
-
-      function adicionarComentarioAoDOM(nota, texto) {
-          const listaContainer = document.getElementById('lista-comentarios');
-          if (!listaContainer) return;
-
-          if (listaContainer.textContent.includes("Nenhuma avaliação encontrada")) {
-              listaContainer.innerHTML = '';
-          }
-
-          const card = document.createElement('div');
-          card.className = 'comentario-card';
-          card.innerHTML = `
-              <div class="comentario-header">
-                  <strong>Você</strong>
-                  <span>★ ${nota}/5</span>
-              </div>
-              <p>${texto}</p>
-          `;
-
+ 
+    div.textContent = mensagem;
+ 
+    const botao = form.querySelector("button[type='submit']");
+    form.insertBefore(div, botao);
+}
+ 
+ 
+function exibirErro(mensagem) {
+    const main = document.querySelector("main");
+    main.innerHTML = `
+        <div style="text-align: center; padding: 80px 20px; color: #2b1506;">
+            <h2>Ops, algo deu errado</h2>
+            <p style="margin-top: 15px; color: #555;">${mensagem}</p>
+            <a href="listar.html" class="btn-primary"
+               style="display: inline-block; margin-top: 30px; padding: 10px 25px; width: auto;">
+                ← Voltar para as receitas
+            </a>
+        </div>`;
+}
+ 

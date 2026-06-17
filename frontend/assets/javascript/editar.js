@@ -1,10 +1,19 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-    const isAutenticado = sessionStorage.getItem('autenticado');
-    if (!isAutenticado) {
-        alert("Acesso negado. Por favor, faça login para editar receitas.");
-        window.location.href = 'login.html';
+    const user = sessionStorage.getItem('usuario');
+    if (user) {
+        let usuarioLogado = JSON.parse(user)
+        
+        if (usuarioLogado.funcao === "USER"){
+            alert("Acesso negado. Voce nao tem premissão para realizar essa ação.");
+            window.location.href = 'index.html';
+            return;
+        }
+    }else{
+        alert("Acesso negado. Voce nao tem premissão para realizar essa ação.");
+        window.location.href = 'index.html';
         return;
+        
     }
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -17,15 +26,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     carregarDadosReceita(receitaId);
-
     configurarFormularioEdicao(receitaId);
 });
 
 function carregarDadosReceita(id) {
-    fetch(`${API_BASE_URL}/detalhes?id=${id}`, {
-        method: 'GET',
-        credentials: 'include'
-    })
+    
+    fetch(`http://localhost:8081/site/detalhes_receita?id=${id}`)
     .then(response => {
         if (response.status === 401) {
             sessionStorage.removeItem('autenticado');
@@ -38,21 +44,19 @@ function carregarDadosReceita(id) {
         return response.json();
     })
     .then(receita => {
-
         document.getElementById('nome').value = receita.nome || '';
         document.getElementById('categoria').value = receita.categoria || 'PRATO_PRINCIPAL';
-        document.getElementById('tempo_preparo').value = receita.tempo_preparo || '';
+
+        document.getElementById('tempo_preparo').value = receita.tempoPreparo || '';
         document.getElementById('rendimento').value = receita.rendimento || '';
         document.getElementById('ingredientes').value = receita.ingredientes || '';
-        document.getElementById('modo_preparo').value = receita.modo_preparo || '';
+        document.getElementById('modo_preparo').value = receita.modoPreparo || '';
 
         const fotoAtual = document.getElementById('foto-atual');
         if (fotoAtual) {
-            if (receita.foto) {
-                fotoAtual.textContent = `Uma imagem já está salva. Selecione um novo arquivo apenas se quiser substituí-la.`;
-            } else {
-                fotoAtual.textContent = `Nenhuma imagem cadastrada anteriormente.`;
-            }
+            fotoAtual.textContent = receita.foto
+                ? 'Uma imagem já está salva. Selecione um novo arquivo apenas se quiser substituí-la.'
+                : 'Nenhuma imagem cadastrada anteriormente.';
         }
     })
     .catch(error => {
@@ -67,42 +71,68 @@ function carregarDadosReceita(id) {
 function configurarFormularioEdicao(id) {
     const formEditar = document.getElementById('form-editar');
 
-    if (formEditar) {
-        formEditar.addEventListener('submit', (e) => {
-            e.preventDefault();
-            limparMensagensErro();
+    if (!formEditar) return;
 
-            const formData = new FormData(formEditar);
-            formData.append('id', id);
+    formEditar.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        limparMensagensErro();
 
-            fetch(`${API_BASE_URL}/editar`, {
-                method: 'POST',
-                body: formData,
-                credentials: 'include'
-            })
-            .then(verificarAutenticacao)
-            .then(response => {
-                if (response.ok) {
-                    return response.json().then(data => {
-                        alert(data.mensagem || "Receita atualizada com sucesso!");
-                        window.location.href = 'listar.html';
-                    });
-                } else if (response.status === 400) {
-                    return response.json().then(data => {
-                        mostrarErrosValidacao(data);
-                    });
-                } else {
-                    throw new Error("Erro inesperado no servidor.");
-                }
-            })
-            .catch(error => {
-                console.error("Erro ao atualizar receita:", error);
-                if (error.message !== 'Sessão expirada ou não autorizada.') {
-                    mostrarErroGeral("Ocorreu um erro ao tentar atualizar a receita. Verifique os dados e tente novamente.");
-                }
-            });
+        // Converte a foto para base64 se o usuário selecionou uma nova
+        const fotoInput = document.getElementById('foto');
+        let fotoBase64 = null;
+
+        if (fotoInput.files && fotoInput.files[0]) {
+            fotoBase64 = await converterParaBase64(fotoInput.files[0]);
+        }
+
+        // Monta o payload como JSON, igual ao CadastrarReceitaServlet espera
+        const json = {  
+            id: parseInt(id),
+            nome: document.getElementById('nome').value,
+            categoria: document.getElementById('categoria').value,
+            tempoPreparo: document.getElementById('tempo_preparo').value,
+            rendimento: document.getElementById('rendimento').value,
+            ingredientes: document.getElementById('ingredientes').value,
+            modoPreparo: document.getElementById('modo_preparo').value,
+            foto: fotoBase64  // null se o usuário não selecionou nova foto
+        };
+
+        fetch(`http://localhost:8081/site/editar_receita`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(json)
+        })
+        .then(async response => {
+            if (response.ok) {
+                return response.json().then(data => {
+                    alert(data.mensagem || "Receita atualizada com sucesso!");
+                    window.location.href = 'listar.html';
+                });
+            } else if (response.status === 400) {
+                return response.json().then(data => {
+                    mostrarErrosValidacao(data);
+                });
+            } else {
+                throw new Error("Erro inesperado no servidor.");
+            }
+        })
+        .catch(error => {
+            console.error("Erro ao atualizar receita:", error);
+            if (error.message !== 'Sessão expirada ou não autorizada.') {
+                mostrarErroGeral("Ocorreu um erro ao tentar atualizar a receita. Verifique os dados e tente novamente.");
+            }
         });
-    }
+    });
+}
+
+// Lê o arquivo de imagem selecionado e retorna como string base64
+function converterParaBase64(arquivo) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result); // já vem como "data:image/...;base64,..."
+        reader.onerror = () => reject(new Error('Erro ao ler o arquivo de imagem.'));
+        reader.readAsDataURL(arquivo);
+    });
 }
 
 function mostrarErrosValidacao(data) {
@@ -136,6 +166,6 @@ function mostrarErroGeral(mensagem) {
 }
 
 function limparMensagensErro() {
-    const errosAntigos = document.querySelectorAll('.container-erros-dinamicos');
-    errosAntigos.forEach(erro => erro.remove());
+    document.querySelectorAll('.container-erros-dinamicos')
+            .forEach(erro => erro.remove());
 }

@@ -13,30 +13,35 @@ document.addEventListener("DOMContentLoaded", () => {
             mensagemErro.classList.remove('message-error');
 
             const dadosLogin = {
-                login: email,
+                email: email,
                 senha: senha
             };
 
-            fetch(`${API_BASE_URL}/login`, {
+            fetch("http://localhost:8081/site/logar", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(dadosLogin),
-                credentials: 'include'
+                body: JSON.stringify(dadosLogin)
             })
-            .then(response => {
+            .then(async response => {
+                let data = await response.json()
+                
                 if (response.ok) {
-                    sessionStorage.setItem('autenticado', 'true');
-                    window.location.href = 'index.html';
-                } else if (response.status === 401) {
-                    mostrarErro("E-mail ou senha incorretos.");
-                } else if (response.status === 400) {
-                    return response.json().then(data => {
-                        mostrarErro(data.mensagem || "Dados inválidos.");
-                    });
-                } else {
-                    mostrarErro("Erro inesperado ao tentar fazer login.");
+                    console.log("resposta ok")
+                    
+                    return data
+                }  else {
+                    console.log("algum erro ocoreu")
+                    mostrarErro(data.problemas);
+                    return data
+                }
+            })
+            .then(dados => {
+                console.log(dados)
+                if(dados.usuario){
+                    sessionStorage.setItem("usuario", JSON.stringify(dados.usuario))
+                    window.location.href = "index.html"
                 }
             })
             .catch(error => {

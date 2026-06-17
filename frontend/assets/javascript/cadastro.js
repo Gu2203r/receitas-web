@@ -19,13 +19,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 senha: senha
             };
 
-            fetch(`${API_BASE_URL}/cadastrarUsuario`, {
+            fetch("http://localhost:8081/site/cadastro_usuario", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(dadosUsuario),
-                credentials: 'include'
+                body: JSON.stringify(dadosUsuario)
             })
             .then(response => {
                 if (response.ok) {
@@ -33,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     window.location.href = 'login.html';
                 } else if (response.status === 400) {
                     return response.json().then(data => {
-                        mostrarErro(data.mensagem || "Dados inválidos. O e-mail já pode estar em uso.");
+                        mostrarErro(data.problemas);
                     });
                 } else {
                     mostrarErro("Erro inesperado ao tentar criar a conta.");
