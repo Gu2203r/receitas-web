@@ -59,7 +59,6 @@ public class CadastroUsuarioServlet extends HttpServlet {
             email = user.getEmail();
             senha = user.getSenha();
             funcao = user.getFuncao();
-            System.out.println("entra aqui");
 
         }else {
             nome = "";
@@ -80,7 +79,7 @@ public class CadastroUsuarioServlet extends HttpServlet {
             System.out.println("email invalido");
         }
 
-        if (dao.listar().containsKey(email)){
+        if (dao.buscaPorLogin(email) != null){
             listaMensagens.add("Email ja cadastrado");
             System.out.println("Email ja cadastrado");
         }

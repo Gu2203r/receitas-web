@@ -20,10 +20,21 @@ public class ListarReceitaServlet extends HttpServlet {
     private final Gson gson = new Gson();
 
     @Override
+    protected void doOptions(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        super.doOptions(request, response);
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+        response.setStatus(HttpServletResponse.SC_OK);
+    }
+
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ReceitaDAO dao = (ReceitaCsvDAO) getServletContext().getAttribute("daoReceita");
+        UsuarioDAO daoUsuario = (UsuarioDAO) getServletContext().getAttribute("daoUsuario");
 
         List<Receita> listaReceitas = dao.listar();
+        listaReceitas.forEach(receita -> receita.setAutor(daoUsuario.buscaPorLogin(receita.getAutor()).getNome()));
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
@@ -33,17 +44,5 @@ public class ListarReceitaServlet extends HttpServlet {
         pw.print(gson.toJson(listaReceitas));
     }
 
-    @Override
-    public void init() throws ServletException {
-        // Dao de receitas inicial
-        ReceitaDAO daoReceita = new ReceitaCsvDAO(getServletContext().getRealPath("/"));
-        getServletContext().setAttribute("daoReceita", daoReceita);
-
-        // Dao de usuarios inicial
-        UsuarioDAO daoUsuario = new UsuarioCsvDAO(getServletContext().getRealPath("/"));
-        getServletContext().setAttribute("daoUsuario", daoUsuario);
-
-        System.out.println("Dados Carregados")  ;
-    }
 
 }
