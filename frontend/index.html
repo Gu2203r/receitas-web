@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,28 +7,27 @@
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
+
 <nav class="navbar">
     <a href="index.html">
         <div class="logo">La Cuisine Brasil</div>
     </a>
-
-
-    <form class="search-container">
+ 
+    <form class="search-container" style="position: relative; display: flex;">
         <input type="text" placeholder="Pesquisar receitas..." required>
+        <button type="submit" class="search-icon" style="background: none; border: none; cursor: pointer; font-size: 16px;" aria-label="Buscar">
+            
+        </button>
     </form>
-
-    <ul class="nav-links" id="menu">
-
-    </ul>
+ 
+    <ul class="nav-links" id="menu"></ul>
 </nav>
 
 <header class="hero">
     <div class="hero-text">
         <h1>Cozinhar é uma arte que se compartilha.</h1>
         <p>Descubra as melhores receitas selecionadas por especialistas.</p>
-
-        <a href="login.html" class="btn-primary"
-           style="width: auto; padding: 15px 40px;">
+        <a href="login.html" class="btn-primary" style="width: auto; padding: 15px 40px;">
             Criar minha conta
         </a>
     </div>
@@ -36,44 +35,31 @@
 
 <section class="container">
     <h2 class="section-title">Receitas em Destaque</h2>
-
     <div class="recipe-grid" id="receitas-destaque">
-
-
         <div class="recipe-card">
-            <div class="card-image"
-                 style="background-image: url('assets/images/fundoinicial.png');">
-            </div>
-
+            <div class="card-image" style="background-image: url('assets/images/fundoinicial.png');"></div>
             <div class="card-info">
                 <h3>Carregando receitas...</h3>
                 <p>Aguarde...</p>
             </div>
         </div>
-
     </div>
 </section>
 
 <section class="container bg-light">
     <h2 class="section-title">Novidades da Semana</h2>
-
     <div class="novidades-row">
 
         <div class="novidade-banner">
-            <img src="assets/images/fundopizza.png"
-                 alt="Novidades">
+            <img src="assets/images/fundopizza.png" alt="Novidade">
             <div class="novidade-tag">NOVO</div>
         </div>
 
         <div class="novidade-texto">
             <h3>Carregando novidade...</h3>
             <p>Aguarde...</p>
-
             <br>
-
-            <a href="#"
-               class="btn-primary"
-               style="width: auto;">
+            <a href="#" class="btn-primary" style="width: auto;">
                 Ler Passo a Passo
             </a>
         </div>
@@ -82,38 +68,22 @@
 </section>
 
 <section class="container">
-
     <h2 class="section-title">As Mais Amadas</h2>
-
-    <div class="recipe-grid" id="receitas-populares">
-
+    <div class="recipe-grid" id="receitas-primeiras">
         <div class="recipe-card">
-
-            <div class="card-image"
-                 style="background-image: url('assets/images/fundoinicial.png');">
-
-                <span class="badge-popular">
-                    🔥 Popular
-                </span>
-
+            <div class="card-image" style="background-image: url('assets/images/fundoinicial.png');">
+                <span class="badge-popular">🔥 Popular</span>
             </div>
-
             <div class="card-info">
                 <h3>Carregando receitas...</h3>
                 <p>Aguarde...</p>
             </div>
-
         </div>
-
     </div>
-
 </section>
 
-<footer style="background: #2b1506; color: white; text-align: center; padding: 40px 0; margin-top: 50px;">
+<footer class="main-footer">
     <p>&copy; 2026 La Cuisine Brasil - Todos os direitos reservados.</p>
-    <p style="font-size: 12px; color: #888; margin-top: 10px;">
-
-    </p>
 </footer>
 
 <script src="assets/javascript/config.js"></script>

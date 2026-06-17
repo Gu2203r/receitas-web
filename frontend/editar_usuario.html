@@ -11,40 +11,49 @@
     <a href="index.html">
         <div class="logo">La Cuisine Brasil</div>
     </a>
-
-    <form class="search-container">
-        <input type="text"
-               placeholder="Pesquisar receitas..."
-               required>
+ 
+    <form class="search-container" style="position: relative; display: flex;">
+        <input type="text" placeholder="Pesquisar receitas..." required>
+        <button type="submit" class="search-icon" style="background: none; border: none; cursor: pointer; font-size: 16px;" aria-label="Buscar">
+            
+        </button>
     </form>
-
-    <ul class="nav-links" id="menu">
-    </ul>
+ 
+    <ul class="nav-links" id="menu"></ul>
 </nav>
 
 <div class="container-auth">
     <div class="auth-card" style="width: 500px; margin-top: 50px;">
 
-        <h2>Editar Perfil de Usuário</h2>
+        <h2>Editar Perfil</h2>
 
         <form id="form-editar-usuario">
 
             <div class="input-group">
                 <label for="nome_usuario">Nome</label>
-                <input
-                        type="text"
-                        id="nome_usuario"
-                        name="nome_usuario"
-                        required>
+                <input type="text" id="nome_usuario" name="nome_usuario" class="custom-field" required>
+                <span id="erro_nome" class="campo-erro"></span>
             </div>
 
             <div class="input-group">
-                <label for="email_usuario">E-mail</label>
-                <input
-                        type="email"
-                        id="email_usuario"
-                        name="email_usuario"
-                        required>
+                <label for="senha_atual">Senha Atual</label>
+                <input type="password" id="senha_atual" name="senha_atual" class="custom-field"
+                       placeholder="Digite sua senha atual" required>
+                <span id="erro_senha_atual" class="campo-erro"></span>
+            </div>
+
+            <div class="input-group">
+                <label for="nova_senha">Nova Senha</label>
+                <input type="password" id="nova_senha" name="nova_senha" class="custom-field"
+                       placeholder="Mínimo 6 caracteres" required>
+                <span id="erro_nova_senha" class="campo-erro"></span>
+            </div>
+
+            <div class="input-group">
+                <label for="confirmar_senha">Confirmar Nova Senha</label>
+                <input type="password" id="confirmar_senha" name="confirmar_senha" class="custom-field"
+                       placeholder="Repita a nova senha" required>
+                <span id="erro_confirmar" class="campo-erro"></span>
             </div>
 
             <button type="submit" class="btn-primary">
@@ -56,10 +65,8 @@
     </div>
 </div>
 
-<footer style="background: #2b1506; color: white; text-align: center; padding: 40px 0; margin-top: 50px;">
+<footer class="main-footer">
     <p>&copy; 2026 La Cuisine Brasil - Todos os direitos reservados.</p>
-    <p style="font-size: 12px; color: #888; margin-top: 10px;">
-    </p>
 </footer>
 
 <script src="assets/javascript/config.js"></script>
