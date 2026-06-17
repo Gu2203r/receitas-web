@@ -35,6 +35,8 @@ public class CadastroUsuarioServlet extends HttpServlet {
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
 
         String contentType = request.getContentType();
         String nome;
@@ -109,7 +111,7 @@ public class CadastroUsuarioServlet extends HttpServlet {
         }
 
         response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
+
         PrintWriter pw = response.getWriter();
 
         pw.println(gson.toJson(mensagem));

@@ -32,10 +32,11 @@ public class IndexReceitasServlet extends HttpServlet {
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
 
         ReceitaDAO daoReceita = (ReceitaDAO) getServletContext().getAttribute("daoReceita");
         AvaliacaoDAO daoAvaliacao = (AvaliacaoDAO) getServletContext().getAttribute("daoAvaliacao");
-        UsuarioDAO daoUsuario = (UsuarioDAO) getServletContext().getAttribute("daoUsuario");
 
         Map<String, Object> resultado = new HashMap<>();
 
@@ -72,8 +73,6 @@ public class IndexReceitasServlet extends HttpServlet {
 
         resultado.put("primeirasAdicionadas", listaPrimeiras);
 
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
 
         response.setStatus(HttpServletResponse.SC_OK);
         pw.print(gson.toJson(resultado));

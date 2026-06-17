@@ -4,6 +4,7 @@ import br.edu.ifsp.model.Categoria;
 import br.edu.ifsp.model.Receita;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,9 @@ public class ReceitaCsvDAO implements ReceitaDAO {
         try {
             checkFile();
 
-            FileWriter fw = new FileWriter(path, true);
+            OutputStreamWriter fw = new OutputStreamWriter(
+                    new FileOutputStream(path, true), StandardCharsets.UTF_8
+            );
             PrintWriter pw = new PrintWriter(fw);
 
             receita.setId(getProxId());
@@ -45,7 +48,9 @@ public class ReceitaCsvDAO implements ReceitaDAO {
 
         try {
             checkFile();
-            FileReader fr = new FileReader(path);
+            InputStreamReader fr = new InputStreamReader(
+                    new FileInputStream(path), StandardCharsets.UTF_8
+            );
             BufferedReader br = new BufferedReader(fr);
 
             String linha;
