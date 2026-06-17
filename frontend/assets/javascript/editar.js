@@ -85,7 +85,7 @@ function configurarFormularioEdicao(id) {
             fotoBase64 = await converterParaBase64(fotoInput.files[0]);
         }
 
-        // Monta o payload como JSON, igual ao CadastrarReceitaServlet espera
+        // Monta o JSON, igual ao CadastrarReceitaServlet espera
         const json = {  
             id: parseInt(id),
             nome: document.getElementById('nome').value,
@@ -112,6 +112,10 @@ function configurarFormularioEdicao(id) {
                 return response.json().then(data => {
                     mostrarErrosValidacao(data);
                 });
+            } else if(response.status === 401){
+                sessionStorage.clear()
+                window.location.href = 'login.html'
+
             } else {
                 throw new Error("Erro inesperado no servidor.");
             }
@@ -129,7 +133,7 @@ function configurarFormularioEdicao(id) {
 function converterParaBase64(arquivo) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = () => resolve(reader.result); // já vem como "data:image/...;base64,..."
+        reader.onload = () => resolve(reader.result);
         reader.onerror = () => reject(new Error('Erro ao ler o arquivo de imagem.'));
         reader.readAsDataURL(arquivo);
     });
